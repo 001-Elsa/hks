@@ -71,6 +71,8 @@ function App() {
   const [unreadCount, setUnreadCount] = useState(0);
   const chatListRef = useRef<HTMLDivElement>(null);
   const chatTabActiveRef = useRef(false);
+  const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false);
+  const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(false);
 
   // auto-scroll chat
   useEffect(() => {
@@ -509,8 +511,23 @@ function App() {
         <BgmPlayer />
       </section>
 
-      <section className="grid">
-        <aside className="panel controls">
+      <section
+        className={`grid${leftSidebarCollapsed ? " is-left-collapsed" : ""}${
+          rightSidebarCollapsed ? " is-right-collapsed" : ""
+        }`}
+      >
+        <aside
+          className={`panel controls side-panel${leftSidebarCollapsed ? " is-collapsed" : ""}`}
+          data-collapsed-label="房间"
+        >
+          <button
+            type="button"
+            className="side-toggle side-toggle-left"
+            onClick={() => setLeftSidebarCollapsed((prev) => !prev)}
+            aria-label={leftSidebarCollapsed ? "展开左侧栏" : "收起左侧栏"}
+          >
+            {leftSidebarCollapsed ? ">" : "<"}
+          </button>
           <h2>房间操作</h2>
 
           {!room && !fromInvite && (
@@ -961,7 +978,18 @@ function App() {
           )}
         </section>
 
-        <aside className="panel roster-panel">
+        <aside
+          className={`panel roster-panel side-panel${rightSidebarCollapsed ? " is-collapsed" : ""}`}
+          data-collapsed-label="身份"
+        >
+          <button
+            type="button"
+            className="side-toggle side-toggle-right"
+            onClick={() => setRightSidebarCollapsed((prev) => !prev)}
+            aria-label={rightSidebarCollapsed ? "展开右侧栏" : "收起右侧栏"}
+          >
+            {rightSidebarCollapsed ? "<" : ">"}
+          </button>
           <h2>玩家与身份</h2>
 
           {room?.worldState.clues && room.worldState.clues.length > 0 && (
